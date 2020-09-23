@@ -13,6 +13,7 @@ export const useUser = () => {
     const state = reactive({
         errEmail: null,
         errPass: null,
+        userListResponse: null,
     });
 
     const doSignIn = async (email, pass) => {
@@ -57,9 +58,25 @@ export const useUser = () => {
         }
     };
 
+    const getUserList = async () => {
+        const response = await timewiseApi.get('/user/list').catch((e) => {
+            if (e.response) {
+                console.log(e.response.status);
+            } else {
+                console.log(e);
+            }
+            return null;
+        });
+
+        if (response) {
+            state.userListResponse = response.data.data;
+        }
+    }
+
     return {
         ...toRefs(state),
         doSignIn,
+        getUserList
     };
 
 }
