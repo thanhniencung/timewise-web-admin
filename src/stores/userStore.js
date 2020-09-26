@@ -38,7 +38,7 @@ export const useUser = () => {
             return;
         }
 
-        const response = await timewiseApi.post('/user/sign-in', {
+        const response = await timewiseApi.post('/admin/sign-in', {
             email: email.trim(),
             password: pass.trim()
         }).catch((e) => {
@@ -56,6 +56,11 @@ export const useUser = () => {
             localStorage.setItem("user", user);
             return user;
         }
+    };
+
+    const doLogout = () => {
+        localStorage.setItem("token", null);
+        localStorage.setItem("user", null);
     };
 
     const getUserList = async () => {

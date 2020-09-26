@@ -21,7 +21,7 @@
             <span class="mdc-floating-label" id="my-label-id">Email</span>
             <span class="mdc-line-ripple"></span>
           </label>
-          <span style="font-size: 13px; color: red;">{{errEmail}}</span>
+          <span style="font-size: 13px; color: red">{{ errEmail }}</span>
         </section>
 
         <section>
@@ -37,7 +37,7 @@
             <span class="mdc-floating-label" id="my-label-id">Mật khẩu</span>
             <span class="mdc-line-ripple"></span>
           </label>
-          <span style="font-size: 13px; color: red;">{{errPass}}</span>
+          <span style="font-size: 13px; color: red">{{ errPass }}</span>
         </section>
 
         <button type="submit" class="mdc-button mdc-button--raised">

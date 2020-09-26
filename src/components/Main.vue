@@ -2,24 +2,42 @@
   <!-- Top App Bar -->
   <header class="mdc-top-app-bar">
     <div class="mdc-top-app-bar__row">
-      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+      <section
+        class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"
+      >
         <button
           class="mdc-top-app-bar__navigation-icon mdc-icon-button material-icons"
           href="#"
-        >menu</button>
+        >
+          menu
+        </button>
         <a
           class="mdc-top-app-bar__title"
           href="https://www.webdenim.io"
           target="_blank"
-          style="color: inherit;"
-        >Timewise</a>
+          style="color: inherit"
+          >Timewise</a
+        >
+      </section>
+
+      <section
+        class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end"
+        role="toolbar"
+      >
+        <button
+          @click="logout()"
+          class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
+          aria-label="power_settings_new"
+        >
+          power_settings_new
+        </button>
       </section>
     </div>
   </header>
 
   <div class="app-drawer-layout mdc-top-app-bar--fixed-adjust">
     <!-- Drawer -->
-    <aside class="mdc-drawer mdc-drawer--dismissible demo-drawer">
+    <aside class="mdc-drawer mdc-drawer--dismissible app-drawer">
       <nav class="mdc-drawer__drawer">
         <nav class="mdc-drawer__content">
           <div id="icon-with-text-demo" class="mdc-list">
@@ -30,27 +48,59 @@
               aria-current="page"
             >
               <span class="mdc-list-item__ripple"></span>
-              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">show_chart</i>
+              <i
+                class="material-icons mdc-list-item__graphic"
+                aria-hidden="true"
+                >show_chart</i
+              >
               <span class="mdc-list-item__text">Thống kê</span>
             </a>
             <a @click="menuItemClicked('Order')" class="mdc-list-item" href="#">
               <span class="mdc-list-item__ripple"></span>
-              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">receipt</i>
+              <i
+                class="material-icons mdc-list-item__graphic"
+                aria-hidden="true"
+                >receipt</i
+              >
               <span class="mdc-list-item__text">Đơn hàng</span>
             </a>
-            <a @click="menuItemClicked('Product')" class="mdc-list-item" href="#">
+            <a
+              @click="menuItemClicked('Product')"
+              class="mdc-list-item"
+              href="#"
+            >
               <span class="mdc-list-item__ripple"></span>
-              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">watch</i>
+              <i
+                class="material-icons mdc-list-item__graphic"
+                aria-hidden="true"
+                >watch</i
+              >
               <span class="mdc-list-item__text">Sản phẩm</span>
             </a>
-            <a @click="menuItemClicked('Account')" class="mdc-list-item" href="#">
+            <a
+              @click="menuItemClicked('Account')"
+              class="mdc-list-item"
+              href="#"
+            >
               <span class="mdc-list-item__ripple"></span>
-              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">person</i>
+              <i
+                class="material-icons mdc-list-item__graphic"
+                aria-hidden="true"
+                >person</i
+              >
               <span class="mdc-list-item__text">Tài khoản</span>
             </a>
-            <a @click="menuItemClicked('Settings')" class="mdc-list-item" href="#">
+            <a
+              @click="menuItemClicked('Settings')"
+              class="mdc-list-item"
+              href="#"
+            >
               <span class="mdc-list-item__ripple"></span>
-              <i class="material-icons mdc-list-item__graphic" aria-hidden="true">settings</i>
+              <i
+                class="material-icons mdc-list-item__graphic"
+                aria-hidden="true"
+                >settings</i
+              >
               <span class="mdc-list-item__text">Cài đặt</span>
             </a>
           </div>
@@ -73,6 +123,7 @@ import Product from "../components/Product.vue";
 import Statistics from "../components/Statistics.vue";
 import Order from "../components/Order.vue";
 import Settings from "../components/Settings.vue";
+import router from "../router/router.js";
 
 export default {
   name: "Main",
@@ -105,19 +156,26 @@ export default {
       currentTabComponent.value = module;
     };
 
-    return {
-      currentTabComponent,
-      menuItemClicked,
+    const logout = () => {
+      console.log("logout");
+      localStorage.setItem("token", "");
+      localStorage.setItem("user", "");
+      router.push("/admin/sign-in");
     };
 
     return {
       currentTabComponent,
+      menuItemClicked,
+      logout,
     };
   },
 };
 </script>
 
 <style scoped>
+.app-drawer {
+  position: fixed;
+}
 .main-content {
   padding: 20px;
 }

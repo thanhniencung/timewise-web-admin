@@ -38,7 +38,7 @@ const routes = createRouter({
         },
         {
             name: 'SignIn',
-            path: '/sign-in',
+            path: '/admin/sign-in',
             component: SignIn,
             beforeEnter: ifNotAuthenticated,
         },
