@@ -2,7 +2,10 @@ import {
     toRefs,
     reactive
 } from "vue";
-import timewiseApi from "../network/config.js";
+import {
+    timewiseAdminApi,
+    timewiseApi
+} from "../network/config.js";
 import {
     validateEmail,
     validatePass
@@ -38,7 +41,7 @@ export const useUser = () => {
             return;
         }
 
-        const response = await timewiseApi.post('/admin/sign-in', {
+        const response = await timewiseAdminApi.post('/admin/sign-in', {
             email: email.trim(),
             password: pass.trim()
         }).catch((e) => {
