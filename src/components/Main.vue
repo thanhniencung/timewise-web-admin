@@ -78,6 +78,19 @@
               <span class="mdc-list-item__text">Sản phẩm</span>
             </a>
             <a
+              @click="menuItemClicked('Categories')"
+              class="mdc-list-item"
+              href="#"
+            >
+              <span class="mdc-list-item__ripple"></span>
+              <i
+                class="material-icons mdc-list-item__graphic"
+                aria-hidden="true"
+                >category</i
+              >
+              <span class="mdc-list-item__text">Danh mục</span>
+            </a>
+            <a
               @click="menuItemClicked('Account')"
               class="mdc-list-item"
               href="#"
@@ -120,6 +133,7 @@ import { onMounted, ref } from "vue";
 
 import Account from "../components/Account.vue";
 import Product from "../components/Product.vue";
+import Categories from "../components/Categories.vue";
 import Statistics from "../components/Statistics.vue";
 import Order from "../components/Order.vue";
 import Settings from "../components/Settings.vue";
@@ -132,6 +146,7 @@ export default {
     Product,
     Statistics,
     Order,
+    Categories,
     Settings,
   },
   setup() {

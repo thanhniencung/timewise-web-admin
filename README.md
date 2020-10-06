@@ -17,3 +17,5 @@ mở 1 port khác #3000
 
 
 http://localhost:3001/sign-in -> http://localhost:3001/admin/sign-in
+
+Database: https://dbdiagram.io/d/5db91e4cfa792a62f50da62e

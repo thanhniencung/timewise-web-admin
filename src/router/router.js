@@ -25,7 +25,7 @@ const ifAuthenticated = (to, from, next) => {
         next()
         return
     }
-    next('/sign-in')
+    next('/admin/sign-in')
 }
 
 const routes = createRouter({
