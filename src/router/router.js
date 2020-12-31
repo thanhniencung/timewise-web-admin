@@ -5,7 +5,9 @@ import {
 from "vue-router";
 
 import Main from "../components/Main.vue";
-import SignIn from "../components/SignIn.vue";
+import SignIn from "../components/account/SignIn.vue";
+import AddCate from "../components/category/AddCate.vue";
+import CateList from "../components/category/CateList.vue";
 import NotFound from "../components/NotFound.vue";
 
 const history = createWebHistory();
@@ -32,7 +34,7 @@ const routes = createRouter({
     history,
     routes: [{
             name: 'Main',
-            path: '/',
+            path: '/:focusTargetComponent?',
             component: Main,
             beforeEnter: ifAuthenticated,
         },
@@ -41,6 +43,18 @@ const routes = createRouter({
             path: '/admin/sign-in',
             component: SignIn,
             beforeEnter: ifNotAuthenticated,
+        },
+        {
+            name: 'AddCate',
+            path: '/cate/add',
+            component: AddCate,
+            beforeEnter: ifAuthenticated,
+        },
+        {
+            name: 'CateList',
+            path: '/cate/list',
+            component: CateList,
+            beforeEnter: ifAuthenticated,
         },
         {
             name: 'NotFound',

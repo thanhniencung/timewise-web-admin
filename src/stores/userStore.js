@@ -5,7 +5,7 @@ import {
 import {
     timewiseAdminApi,
     timewiseApi
-} from "../network/config.js";
+} from "../network/timewise_api";
 import {
     validateEmail,
     validatePass
@@ -84,6 +84,7 @@ export const useUser = () => {
     return {
         ...toRefs(state),
         doSignIn,
+        doLogout,
         getUserList
     };
 

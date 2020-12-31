@@ -131,13 +131,14 @@
 <script>
 import { onMounted, ref } from "vue";
 
-import Account from "../components/Account.vue";
-import Product from "../components/Product.vue";
-import Categories from "../components/Categories.vue";
+import Account from "./account/Account.vue";
+import Product from "./product/Product.vue";
+import Categories from "./category/Categories.vue";
 import Statistics from "../components/Statistics.vue";
 import Order from "../components/Order.vue";
 import Settings from "../components/Settings.vue";
 import router from "../router/router.js";
+import { useRoute } from "vue-router";
 
 export default {
   name: "Main",
@@ -150,7 +151,20 @@ export default {
     Settings,
   },
   setup() {
-    let currentTabComponent = ref("Statistics");
+    const {
+      params: { focusTargetComponent },
+    } = useRoute();
+
+    console.log("-----");
+    console.log(focusTargetComponent);
+    console.log("-----");
+
+    let targetComponent = "Statistics";
+    if (focusTargetComponent) {
+      targetComponent = params.focusTargetComponent;
+    }
+    console.log(targetComponent);
+    let currentTabComponent = ref(targetComponent);
 
     onMounted(() => {
       // Instantiate MDC Drawer

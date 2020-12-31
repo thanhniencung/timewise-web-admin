@@ -50,8 +50,8 @@
 
 <script>
 import { onMounted } from "vue";
-import { useUser } from "../stores/userStore";
-import router from "../router/router";
+import { useUser } from "../../stores/userStore";
+import router from "../../router/router";
 
 export default {
   name: "SignIn",

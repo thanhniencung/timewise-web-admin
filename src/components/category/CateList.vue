@@ -1,0 +1,159 @@
+<template>
+  <div class="response-status">
+    <span style="">{{ cateListStatus }}</span>
+  </div>
+  <div v-if="cateListData !== null" class="mdc-data-table">
+    <div class="mdc-data-table__table-container">
+      <table
+        class="mdc-data-table__table"
+        aria-label="Dessert calories"
+        style="width: 100%"
+      >
+        <thead>
+          <tr class="mdc-data-table__header-row" style="width: 50px">
+            <th
+              class="mdc-data-table__header-cell"
+              role="columnheader"
+              scope="col"
+              style="
+                text-align: left;
+                vertical-align: middle;
+                font-weight: bold;
+                width: 100px;
+              "
+            >
+              Hình ảnh
+            </th>
+            <th
+              class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric"
+              role="columnheader"
+              scope="col"
+              style="
+                text-align: left;
+                vertical-align: middle;
+                font-weight: bold;
+              "
+            >
+              Tên
+            </th>
+
+            <th
+              class="mdc-data-table__header-cell"
+              role="columnheader"
+              scope="col"
+              style="
+                text-align: left;
+                vertical-align: middle;
+                font-weight: bold;
+                width: 170px;
+              "
+            >
+              Cập nhật
+            </th>
+
+            <th
+              class="mdc-data-table__header-cell"
+              role="columnheader"
+              scope="col"
+              style="
+                text-align: left;
+                vertical-align: middle;
+                font-weight: bold;
+                width: 100px;
+              "
+            >
+              ...
+            </th>
+          </tr>
+        </thead>
+        <tbody class="mdc-data-table__content">
+          <tr class="mdc-data-table__row">
+            <th
+              class="mdc-data-table__cell"
+              scope="row"
+              style="position: relative"
+            >
+              <img
+                src="https://pbs.twimg.com/profile_images/1136633558754365440/HZuQXUKN.png"
+                width="35"
+                height="35"
+                style="
+                  position: absolute;
+                  top: 50%;
+                  -ms-transform: translateY(-50%);
+                  transform: translateY(-50%);
+                  border-radius: 8%;
+                "
+              />
+            </th>
+            <td
+              class="mdc-data-table__cell mdc-data-table__cell--numeric"
+              style="text-align: left; vertical-align: middle"
+            >
+              Girard Perregaux
+            </td>
+
+            <td
+              class="mdc-data-table__cell"
+              style="text-align: left; vertical-align: middle"
+            >
+              31/12/2020 7:00 AM
+            </td>
+
+            <td
+              class="mdc-data-table__cell"
+              style="text-align: left; vertical-align: middle"
+            >
+              <button
+                @click="editCate()"
+                class="mdc-button mdc-button--raised"
+                style="border-radius: 20px"
+              >
+                <i
+                  class="material-icons mdc-button__icon"
+                  aria-hidden="true"
+                  style="margin-left: 8px"
+                  >edit</i
+                >
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script>
+import { useCate } from "../../stores/cateStore";
+
+export default {
+  name: "CateList",
+
+  setup() {
+    const { cateListData, cateListStatus, getCateList } = useCate();
+
+    getCateList();
+
+    const editCate = () => {};
+
+    return {
+      editCate,
+      cateListData,
+      cateListStatus,
+    };
+  },
+};
+</script>
+
+<style lang="css" scoped>
+.response-status {
+  width: 100% !important;
+  margin-top: 100px;
+  text-align: center;
+}
+.response-status span {
+  color: #666;
+  font-size: 23px;
+}
+</style>

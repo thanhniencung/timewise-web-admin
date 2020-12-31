@@ -1,10 +1,10 @@
 import axios from "axios";
 
-// Create an instance using the config defaults provided by the library
-// At this point the timeout config value is `0` as is the default for the library
+const NETWORK_TIMEOUT = 10000;
+
 const timewiseApi = axios.create({
     baseURL: 'http://localhost:3000/',
-    timeout: 10000,
+    timeout: NETWORK_TIMEOUT,
 });
 
 timewiseApi.interceptors.request.use(function (config) {
@@ -20,7 +20,7 @@ timewiseApi.interceptors.request.use(function (config) {
 
 const timewiseAdminApi = axios.create({
     baseURL: 'http://localhost:8000/',
-    timeout: 10000,
+    timeout: NETWORK_TIMEOUT,
 });
 
 timewiseAdminApi.interceptors.request.use(function (config) {

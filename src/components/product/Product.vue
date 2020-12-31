@@ -32,8 +32,8 @@
 
 <script>
 import { onMounted, ref } from "vue";
-import AddProduct from "../components/AddProduct.vue";
-import ProductList from "../components/ProductList.vue";
+import AddProduct from "./AddProduct.vue";
+import ProductList from "./ProductList.vue";
 
 export default {
   name: "Product",
