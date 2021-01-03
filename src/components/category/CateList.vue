@@ -140,7 +140,7 @@ export default {
     getCateList();
 
     const editCate = (cate) => {
-      emit("editCate", cate);
+      emit("editCateById", cate);
     };
 
     return {

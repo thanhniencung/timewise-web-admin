@@ -37,22 +37,24 @@ import { useCate } from "../../stores/cateStore";
 export default {
   name: "AddCate",
   components: { EditText, SelectBox },
-  props: ["currentCate"],
+  props: ["editCateData"],
   setup(props, { emit }) {
+    console.log(props.editCateData);
     let btnCateLabel = ref("Thêm danh mục");
     let btnIconCate = ref("add");
 
     const { addCate, updateCate, addCateSuccess } = useCate();
 
-    const cateName = ref(props.currentCate ? props.currentCate.cateName : "");
+    const cateName = ref(props.editCateData ? props.editCateData.cateName : "");
     const errCateName = ref();
 
-    const cateImage = ref(props.currentCate ? props.currentCate.cateImage : "");
+    const cateImage = ref(
+      props.editCateData ? props.editCateData.cateImage : ""
+    );
     const errCateImage = ref();
 
     // set trạng thái khi bấm edit danh mục
-    if (props.currentCate) {
-      console.log("okokok");
+    if (props.editCateData) {
       btnCateLabel.value = "Cập nhật danh mục";
       btnIconCate.value = "edit";
     }
@@ -70,9 +72,9 @@ export default {
       }
 
       if (!hasError) {
-        if (props.currentCate) {
+        if (props.editCateData) {
           updateCate({
-            cateId: props.currentCate.cateId,
+            cateId: props.editCateData.cateId,
             cateName: cateName.value,
             cateImage: cateImage.value,
           });

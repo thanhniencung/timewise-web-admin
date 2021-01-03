@@ -155,12 +155,7 @@ export default {
       params: { focusTargetComponent },
     } = useRoute();
 
-    let targetComponent = "Statistics";
-    if (focusTargetComponent) {
-      targetComponent = params.focusTargetComponent;
-    }
-    console.log(targetComponent);
-    let currentTabComponent = ref(targetComponent);
+    let currentTabComponent = ref("Statistics");
 
     onMounted(() => {
       // Instantiate MDC Drawer

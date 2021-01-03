@@ -29,9 +29,9 @@
   </div>
   <component
     :is="currentTabComponent"
-    v-bind="currentCate"
+    v-bind="editCate"
     @addCateSuccess="addCateSuccess"
-    @editCate="editCate"
+    @editCateById="editCateById"
   ></component>
 </template>
 
@@ -46,8 +46,10 @@ export default {
     AddCate,
     CateList,
   },
-  setup() {
-    let currentCate = ref();
+  setup(props, { emit }) {
+    // Thông tin cate muốn edit
+    let editCate = ref();
+
     let currentTabComponent = ref("CateList");
     let showBtnCateList = ref(false);
     let showBtnAddCate = ref(true);
@@ -60,35 +62,37 @@ export default {
 
     const showCateList = () => {
       // khi tới màn hình danh sách danh mục thì reset currentCate
-      currentCate.value = { currentCate: null };
+      editCate.value = { currentCate: null };
 
       showBtnCateList.value = false;
       showBtnAddCate.value = true;
       currentTabComponent.value = "CateList";
     };
 
+    // Xử lý event addCateSuccess
     const addCateSuccess = (added) => {
       showBtnCateList.value = true;
       showBtnAddCate.value = false;
       currentTabComponent.value = "CateList";
     };
 
-    const editCate = (cate) => {
+    // Xử lý event editCateById
+    const editCateById = (cate) => {
       showBtnCateList.value = true;
       showBtnAddCate.value = false;
       currentTabComponent.value = "AddCate";
-      currentCate.value = { currentCate: cate };
+      editCate.value = { editCateData: cate };
     };
 
     return {
-      currentCate,
+      editCate,
       currentTabComponent,
       showCateList,
       showAddCate,
       showBtnCateList,
       showBtnAddCate,
       addCateSuccess,
-      editCate,
+      editCateById,
     };
   },
 };
