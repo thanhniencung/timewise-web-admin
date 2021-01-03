@@ -27,10 +27,16 @@ export const useCate = () => {
         state.addCateSuccess = response.status == 200;
     };
 
+    const updateCate = async (cate) => {
+        const response = await timewiseApi.put('/cate/edit', cate);
+        state.addCateSuccess = response.status == 200;
+    };
+
     return {
         ...toRefs(state),
         getCateList,
         addCate,
+        updateCate,
     };
 
 }

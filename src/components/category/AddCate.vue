@@ -20,8 +20,10 @@
     class="mdc-button mdc-button--raised"
     style="float: left"
   >
-    <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-    <span class="mdc-button__label">Thêm danh mục</span>
+    <i class="material-icons mdc-button__icon" aria-hidden="true">{{
+      btnIconCate
+    }}</i>
+    <span class="mdc-button__label">{{ btnCateLabel }}</span>
   </button>
 </template>
 
@@ -31,20 +33,29 @@ import EditText from "../shared/EditText.vue";
 import SelectBox from "../shared/SelectBox.vue";
 
 import { useCate } from "../../stores/cateStore";
-import { useRouter } from "vue-router";
 
 export default {
   name: "AddCate",
   components: { EditText, SelectBox },
-  setup() {
-    const router = useRouter();
-    const { addCate, addCateSuccess } = useCate();
+  props: ["currentCate"],
+  setup(props, { emit }) {
+    let btnCateLabel = ref("Thêm danh mục");
+    let btnIconCate = ref("add");
 
-    const cateName = ref("");
+    const { addCate, updateCate, addCateSuccess } = useCate();
+
+    const cateName = ref(props.currentCate ? props.currentCate.cateName : "");
     const errCateName = ref();
 
-    const cateImage = ref("");
+    const cateImage = ref(props.currentCate ? props.currentCate.cateImage : "");
     const errCateImage = ref();
+
+    // set trạng thái khi bấm edit danh mục
+    if (props.currentCate) {
+      console.log("okokok");
+      btnCateLabel.value = "Cập nhật danh mục";
+      btnIconCate.value = "edit";
+    }
 
     const doAddCate = () => {
       let hasError = false;
@@ -59,6 +70,14 @@ export default {
       }
 
       if (!hasError) {
+        if (props.currentCate) {
+          updateCate({
+            cateId: props.currentCate.cateId,
+            cateName: cateName.value,
+            cateImage: cateImage.value,
+          });
+          return;
+        }
         addCate({
           cateName: cateName.value,
           cateImage: cateImage.value,
@@ -68,12 +87,8 @@ export default {
 
     watch(addCateSuccess, (addCateSuccess, prevAddCateSuccess) => {
       if (addCateSuccess) {
-        router.push({
-          name: "Main",
-          params: {
-            focusTargetComponent: "Categories",
-          },
-        });
+        console.log(addCateSuccess);
+        emit("addCateSuccess", true);
       }
     });
 
@@ -82,7 +97,8 @@ export default {
       errCateName,
       cateImage,
       errCateImage,
-
+      btnCateLabel,
+      btnIconCate,
       // func
       doAddCate,
     };

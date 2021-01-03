@@ -155,10 +155,6 @@ export default {
       params: { focusTargetComponent },
     } = useRoute();
 
-    console.log("-----");
-    console.log(focusTargetComponent);
-    console.log("-----");
-
     let targetComponent = "Statistics";
     if (focusTargetComponent) {
       targetComponent = params.focusTargetComponent;

@@ -67,14 +67,18 @@
           </tr>
         </thead>
         <tbody class="mdc-data-table__content">
-          <tr class="mdc-data-table__row">
-            <th
+          <tr
+            class="mdc-data-table__row"
+            v-for="cate in cateListData"
+            :key="cate.id"
+          >
+            <td
               class="mdc-data-table__cell"
               scope="row"
               style="position: relative"
             >
               <img
-                src="https://pbs.twimg.com/profile_images/1136633558754365440/HZuQXUKN.png"
+                :src="cate.cateImage"
                 width="35"
                 height="35"
                 style="
@@ -85,19 +89,19 @@
                   border-radius: 8%;
                 "
               />
-            </th>
+            </td>
             <td
               class="mdc-data-table__cell mdc-data-table__cell--numeric"
               style="text-align: left; vertical-align: middle"
             >
-              Girard Perregaux
+              {{ cate.cateName }}
             </td>
 
             <td
               class="mdc-data-table__cell"
               style="text-align: left; vertical-align: middle"
             >
-              31/12/2020 7:00 AM
+              {{ cate.updatedAt }}
             </td>
 
             <td
@@ -105,7 +109,7 @@
               style="text-align: left; vertical-align: middle"
             >
               <button
-                @click="editCate()"
+                @click="editCate(cate)"
                 class="mdc-button mdc-button--raised"
                 style="border-radius: 20px"
               >
@@ -130,12 +134,14 @@ import { useCate } from "../../stores/cateStore";
 export default {
   name: "CateList",
 
-  setup() {
+  setup(props, { emit }) {
     const { cateListData, cateListStatus, getCateList } = useCate();
 
     getCateList();
 
-    const editCate = () => {};
+    const editCate = (cate) => {
+      emit("editCate", cate);
+    };
 
     return {
       editCate,
@@ -149,7 +155,7 @@ export default {
 <style lang="css" scoped>
 .response-status {
   width: 100% !important;
-  margin-top: 100px;
+  margin-top: 20px;
   text-align: center;
 }
 .response-status span {

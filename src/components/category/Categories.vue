@@ -27,7 +27,12 @@
       <span class="mdc-button__label">Thêm danh mục</span>
     </button>
   </div>
-  <component v-bind:is="currentTabComponent"></component>
+  <component
+    :is="currentTabComponent"
+    v-bind="currentCate"
+    @addCateSuccess="addCateSuccess"
+    @editCate="editCate"
+  ></component>
 </template>
 
 <script>
@@ -42,6 +47,7 @@ export default {
     CateList,
   },
   setup() {
+    let currentCate = ref();
     let currentTabComponent = ref("CateList");
     let showBtnCateList = ref(false);
     let showBtnAddCate = ref(true);
@@ -53,17 +59,36 @@ export default {
     };
 
     const showCateList = () => {
+      // khi tới màn hình danh sách danh mục thì reset currentCate
+      currentCate.value = { currentCate: null };
+
       showBtnCateList.value = false;
       showBtnAddCate.value = true;
       currentTabComponent.value = "CateList";
     };
 
+    const addCateSuccess = (added) => {
+      showBtnCateList.value = true;
+      showBtnAddCate.value = false;
+      currentTabComponent.value = "CateList";
+    };
+
+    const editCate = (cate) => {
+      showBtnCateList.value = true;
+      showBtnAddCate.value = false;
+      currentTabComponent.value = "AddCate";
+      currentCate.value = { currentCate: cate };
+    };
+
     return {
+      currentCate,
       currentTabComponent,
       showCateList,
       showAddCate,
       showBtnCateList,
       showBtnAddCate,
+      addCateSuccess,
+      editCate,
     };
   },
 };
