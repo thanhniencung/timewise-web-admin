@@ -45,7 +45,7 @@
                 text-align: left;
                 vertical-align: middle;
                 font-weight: bold;
-                width: 170px;
+                width: 200px;
               "
             >
               Cập nhật
@@ -101,7 +101,7 @@
               class="mdc-data-table__cell"
               style="text-align: left; vertical-align: middle"
             >
-              {{ cate.updatedAt }}
+              {{ formatDate(cate.updatedAt) }}
             </td>
 
             <td
@@ -130,6 +130,7 @@
 
 <script>
 import { useCate } from "../../stores/cateStore";
+import { parseDate } from "../../helper/timeFormat";
 
 export default {
   name: "CateList",
@@ -143,10 +144,15 @@ export default {
       emit("editCateById", cate);
     };
 
+    const formatDate = (d) => {
+      return parseDate(d);
+    };
+
     return {
       editCate,
       cateListData,
       cateListStatus,
+      formatDate,
     };
   },
 };
