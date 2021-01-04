@@ -27,7 +27,11 @@
       <span class="mdc-button__label">Thêm sản phẩm</span>
     </button>
   </div>
-  <component v-bind:is="currentTabComponent"></component>
+  <Suspense>
+    <template #default>
+      <component v-bind:is="currentTabComponent"></component>
+    </template>
+  </Suspense>
 </template>
 
 <script>

@@ -28,7 +28,7 @@
     >
       <ul class="mdc-list">
         <li
-          class="mdc-list-item mdc-list-item--disabled"
+          class="mdc-list-item mdc-list-item--selected"
           aria-selected="false"
           :data-value="selectedObjectValue.id"
           aria-disabled="true"
@@ -41,7 +41,7 @@
         </li>
 
         <li
-          v-for="item in data"
+          v-for="item in data.slice(1, data.length)"
           class="mdc-list-item"
           aria-selected="false"
           :data-value="item.id"

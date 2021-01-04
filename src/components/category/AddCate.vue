@@ -39,7 +39,6 @@ export default {
   components: { EditText, SelectBox },
   props: ["editCateData"],
   setup(props, { emit }) {
-    console.log(props.editCateData);
     let btnCateLabel = ref("Thêm danh mục");
     let btnIconCate = ref("add");
 

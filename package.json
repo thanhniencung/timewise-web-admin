@@ -6,6 +6,7 @@
         "build": "vite build"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-editor-classic": "^24.0.0",
         "axios": "^0.20.0",
         "vue": "^3.0.2",
         "vue-router": "^4.0.0-beta.7"
