@@ -15,6 +15,7 @@
     "
   >
     <button
+      @click="removeAttribute(data.id)"
       type="submit"
       class="mdc-button mdc-button--raised"
       style="float: right; margin-bottom: 12px"
@@ -103,6 +104,10 @@ export default {
       return Date.now().toString(36) + Math.random().toString(36).substr(2);
     };
 
+    const removeAttribute = (id) => {
+      emit("removeAttribute", id);
+    };
+
     return {
       attrName,
       errAttrName,
@@ -116,6 +121,7 @@ export default {
       errQuantity,
 
       //func
+      removeAttribute,
       uid,
     };
   },

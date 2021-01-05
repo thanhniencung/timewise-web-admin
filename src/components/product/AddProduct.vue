@@ -36,6 +36,7 @@
           :is="attrComponent"
           :key="attr.id"
           v-bind:data="attr"
+          @removeAttribute="removeAttribute"
         ></component>
       </div>
     </div>
@@ -126,6 +127,18 @@ export default {
       });
     };
 
+    const removeAttribute = (attrId) => {
+      console.log(attrId);
+      var removeIndex = attrsProduct.value
+        .map(function (item) {
+          return item.id;
+        })
+        .indexOf(attrId);
+      attrsProduct.value.splice(removeIndex, 1);
+
+      //document.getElementById(`${attrId}`).remove();
+    };
+
     const restoreAttrObject = (attr) => {
       let attrName = new mdc.textField.MDCTextField(
         document.querySelector(`#${attr.id} .attr-name`)
@@ -172,6 +185,7 @@ export default {
       updateSelectBox,
       addAttribute,
       addProduct,
+      removeAttribute,
       uid,
     };
   },
