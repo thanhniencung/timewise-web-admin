@@ -1,6 +1,10 @@
 <template>
   <div class="input-container">
-    <label :class="['mdc-text-field mdc-text-field--filled ' + className]">
+    <label
+      :class="[
+        'mdc-text-field mdc-text-field--filled ' + className + ' ' + uuid,
+      ]"
+    >
       <span class="mdc-text-field__ripple"></span>
       <input
         class="mdc-text-field__input"
@@ -40,11 +44,12 @@ export default {
     "hintText",
     "className",
     "errorMsg",
+    "uuid",
   ],
   setup(props, { emit }) {
     onMounted(() => {
       let editText = new mdc.textField.MDCTextField(
-        document.querySelector(`.${props.className}`)
+        document.querySelector(`.${props.uuid}`)
       );
     });
 

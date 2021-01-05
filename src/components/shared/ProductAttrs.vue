@@ -1,11 +1,35 @@
 <template>
-  <div class="attrs" style="border-bottom: 2px dotted #999; margin-top: 20px">
+  <div
+    :id="data.id"
+    class="attrs"
+    style="
+      border-bottom: 3px dotted #5300e8;
+      border-top: 1px solid #e4e4e4;
+      border-left: 1px solid #e4e4e4;
+      border-right: 1px solid #e4e4e4;
+      border-radius: 8px;
+      margin-top: 20px;
+      margin-bottom: 40px;
+      padding: 10px;
+      background-color: #eee6ff;
+    "
+  >
+    <button
+      type="submit"
+      class="mdc-button mdc-button--raised"
+      style="float: right; margin-bottom: 12px"
+    >
+      <i class="material-icons mdc-button__icon" aria-hidden="true">delete</i>
+      <span class="mdc-button__label">Xóa thuộc tính</span>
+    </button>
+
     <EditText
       hintText="Tên thuộc tính"
       v-model:textValue="attrName"
       inputType="text"
       className="attr-name"
       :errorMsg="errAttrName"
+      :uuid="uid()"
     />
 
     <EditText
@@ -14,6 +38,7 @@
       inputType="number"
       className="attr-size"
       :errorMsg="errSize"
+      :uuid="uid()"
     />
 
     <EditText
@@ -22,6 +47,7 @@
       inputType="number"
       className="attr-price"
       :errorMsg="errPrice"
+      :uuid="uid()"
     />
 
     <EditText
@@ -30,6 +56,7 @@
       inputType="number"
       className="attr-promotion"
       :errorMsg="errPromotion"
+      :uuid="uid()"
     />
 
     <EditText
@@ -38,6 +65,7 @@
       inputType="number"
       className="attr-quantity"
       :errorMsg="errQuantity"
+      :uuid="uid()"
     />
   </div>
 </template>
@@ -48,26 +76,32 @@ import EditText from "../shared/EditText.vue";
 
 export default {
   name: "ProductAttrs",
+  props: ["data"],
   components: {
     EditText,
   },
   setup(props, { emit }) {
-    onMounted(() => {});
+    let data = props.data;
+    let attr = null;
 
-    const attrName = ref();
+    const attrName = ref(data.attrName);
     const errAttrName = ref();
 
-    const size = ref();
+    const size = ref(data.size);
     const errSize = ref();
 
-    const price = ref();
+    const price = ref(data.price);
     const errPrice = ref();
 
-    const promotion = ref();
+    const promotion = ref(data.promotion);
     const errPromotion = ref();
 
-    const quantity = ref();
+    const quantity = ref(data.quantiry);
     const errQuantity = ref();
+
+    const uid = function () {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    };
 
     return {
       attrName,
@@ -80,6 +114,9 @@ export default {
       errPromotion,
       quantity,
       errQuantity,
+
+      //func
+      uid,
     };
   },
 };
