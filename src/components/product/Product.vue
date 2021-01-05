@@ -29,7 +29,10 @@
   </div>
   <Suspense>
     <template #default>
-      <component v-bind:is="currentTabComponent"></component>
+      <component
+        v-bind:is="currentTabComponent"
+        @addProductSuccess="addProductSuccess"
+      ></component>
     </template>
   </Suspense>
 </template>
@@ -62,12 +65,20 @@ export default {
       currentTabComponent.value = "ProductList";
     };
 
+    // Xử lý event addProductSuccess
+    const addProductSuccess = (added) => {
+      showBtnProductList.value = false;
+      showBtnAddProduct.value = true;
+      currentTabComponent.value = "ProductList";
+    };
+
     return {
       currentTabComponent,
       showProductList,
       showAddProduct,
       showBtnProductList,
       showBtnAddProduct,
+      addProductSuccess,
     };
   },
 };

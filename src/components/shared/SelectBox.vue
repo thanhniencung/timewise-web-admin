@@ -90,6 +90,7 @@ export default {
         document.querySelector(`.${props.className}`)
       );
       dropdownList.listen("MDCSelect:change", () => {
+        console.log(dropdownList.value);
         emit("DropdownListSelected", {
           id: dropdownList.value,
         });

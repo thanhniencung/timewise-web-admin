@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import EditText from "../shared/EditText.vue";
 import SelectBox from "../shared/SelectBox.vue";
 import CKEditor from "../shared/CKEditor.vue";
@@ -78,7 +78,7 @@ export default {
     CKEditor,
     ProductAttrs,
   },
-  async setup() {
+  async setup(props, { emit }) {
     // chứa thông tin attributes của 1 sản phẩm
     const attrsProduct = ref([]);
 
@@ -95,7 +95,7 @@ export default {
     let cateSelected = null;
 
     // Lấy về danh sách danh mục
-    const { getCateList, addProduct } = useProduct();
+    const { getCateList, addProduct, addProductSuccess } = useProduct();
     const categories = await getCateList();
 
     // Lấy mặc định giá trị đầu tiền của danh sách danh mục
@@ -139,14 +139,13 @@ export default {
       const collectProductFormData = {
         productName: productName.value,
         productImage: productImage.value,
-        cateId: "58adfdd6-08f8-11eb-bdbe-8c8590cefb77",
+        cateId: cateSelected,
         description: productDes.value,
         collectionId: "1", // giá trị này là hardcode do hệ thống chỉ bán đồng hồ, nếu mở rộng bán sản phẩm khác thì giá trị này sẽ thay đổi
         attributes: attrs,
       };
 
       console.log(JSON.stringify(collectProductFormData));
-
       addProduct(collectProductFormData);
     };
 
@@ -193,6 +192,13 @@ export default {
         quantity: parseInt(quantity.value),
       };
     };
+
+    watch(addProductSuccess, (addProductSuccess, prevAddProductSuccess) => {
+      if (addProductSuccess) {
+        console.log(addProductSuccess);
+        emit("addProductSuccess", true);
+      }
+    });
 
     return {
       productName,

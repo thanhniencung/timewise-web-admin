@@ -34,19 +34,6 @@
               Tên
             </th>
             <th
-              class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric"
-              role="columnheader"
-              scope="col"
-              style="
-                text-align: left;
-                vertical-align: middle;
-                font-weight: bold;
-                width: 100px;
-              "
-            >
-              Giá
-            </th>
-            <th
               class="mdc-data-table__header-cell"
               role="columnheader"
               scope="col"
@@ -54,33 +41,7 @@
                 text-align: left;
                 vertical-align: middle;
                 font-weight: bold;
-                width: 100px;
-              "
-            >
-              Số lượng
-            </th>
-            <th
-              class="mdc-data-table__header-cell"
-              role="columnheader"
-              scope="col"
-              style="
-                text-align: center;
-                vertical-align: middle;
-                font-weight: bold;
-                width: 150px;
-              "
-            >
-              Khuyến mãi
-            </th>
-            <th
-              class="mdc-data-table__header-cell"
-              role="columnheader"
-              scope="col"
-              style="
-                text-align: left;
-                vertical-align: middle;
-                font-weight: bold;
-                width: 150px;
+                width: 200px;
               "
             >
               Danh mục
@@ -93,7 +54,7 @@
                 text-align: left;
                 vertical-align: middle;
                 font-weight: bold;
-                width: 170px;
+                width: 200px;
               "
             >
               Cập nhật
@@ -106,22 +67,26 @@
                 text-align: left;
                 vertical-align: middle;
                 font-weight: bold;
-                width: 100px;
+                width: 200px;
               "
             >
-              ...
+              Thao tác
             </th>
           </tr>
         </thead>
         <tbody class="mdc-data-table__content">
-          <tr class="mdc-data-table__row">
+          <tr
+            v-for="product in products"
+            class="mdc-data-table__row"
+            :key="product.productId"
+          >
             <th
               class="mdc-data-table__cell"
               scope="row"
               style="position: relative"
             >
               <img
-                src="https://salt.tikicdn.com/cache/w80/ts/product/e0/aa/b7/79df464e939c2518d955f9e4a59b52d8.jpg"
+                :src="product.productImage"
                 width="35"
                 height="35"
                 style="
@@ -137,43 +102,21 @@
               class="mdc-data-table__cell mdc-data-table__cell--numeric"
               style="text-align: left; vertical-align: middle"
             >
-              Vũ Trụ Trong Vỏ Hạt Dẻ (Tái Bản 2018)
-            </td>
-            <td
-              class="mdc-data-table__cell mdc-data-table__cell--numeric"
-              style="text-align: left; vertical-align: middle"
-            >
-              500.000
-            </td>
-            <td
-              class="mdc-data-table__cell"
-              style="text-align: left; vertical-align: middle"
-            >
-              100
-            </td>
-            <td
-              class="mdc-data-table__cell"
-              style="text-align: center; vertical-align: middle"
-            >
-              <img
-                width="25"
-                height="25"
-                src="https://thumbs.gfycat.com/NearShyBongo-size_restricted.gif"
-                alt="sale"
-              />
-            </td>
-            <td
-              class="mdc-data-table__cell"
-              style="text-align: left; vertical-align: middle"
-            >
-              Bìa mềm
+              {{ product.productName }}
             </td>
 
             <td
               class="mdc-data-table__cell"
               style="text-align: left; vertical-align: middle"
             >
-              10/10/2020 7:00 AM
+              {{ product.cateName }}
+            </td>
+
+            <td
+              class="mdc-data-table__cell"
+              style="text-align: left; vertical-align: middle"
+            >
+              {{ formatDate(product.updatedAt) }}
             </td>
 
             <td
@@ -183,13 +126,26 @@
               <button
                 type="submit"
                 class="mdc-button mdc-button--raised"
-                style="border-radius: 20px"
+                style="border-radius: 20px; margin-right: 10px"
               >
                 <i
                   class="material-icons mdc-button__icon"
                   aria-hidden="true"
                   style="margin-left: 8px"
                   >edit</i
+                >
+              </button>
+
+              <button
+                type="submit"
+                class="mdc-button mdc-button--raised"
+                style="border-radius: 20px"
+              >
+                <i
+                  class="material-icons mdc-button__icon"
+                  aria-hidden="true"
+                  style="margin-left: 8px"
+                  >visibility</i
                 >
               </button>
             </td>
@@ -201,7 +157,23 @@
 </template>
 
 <script>
+import { useProduct } from "../../stores/productStore";
+import { parseDate } from "../../helper/timeFormat";
+
 export default {
   name: "ProductList",
+  async setup() {
+    const { getProductList } = useProduct();
+    const products = await getProductList();
+
+    const formatDate = (d) => {
+      return parseDate(d);
+    };
+
+    return {
+      products,
+      formatDate,
+    };
+  },
 };
 </script>

@@ -29,10 +29,16 @@ export const useProduct = () => {
         state.addProductSuccess = response.status == 200;
     };
 
+    const getProductList = async () => {
+        const response = await timewiseApi.get('/product/list');
+        return response.data.data;
+    };
+
     return {
         ...toRefs(state),
         getCateList,
         addProduct,
+        getProductList,
     };
 
 }
