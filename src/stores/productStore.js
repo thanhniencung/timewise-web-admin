@@ -8,13 +8,14 @@ import {
 
 export const useProduct = () => {
     const state = reactive({
-        cateListData: null,
-        cateListStatus: null,
-        addCateSuccess: null
+        addProductSuccess: null
     });
 
     const getCateList = async () => {
         const response = await timewiseApi.get('/cate/list');
+        if (!response.data.data) {
+            return [];
+        }
         return response.data.data.map((item) => {
             return {
                 id: item.cateId,
@@ -23,9 +24,15 @@ export const useProduct = () => {
         });
     };
 
+    const addProduct = async (product) => {
+        const response = await timewiseApi.post('/product/add', product);
+        state.addProductSuccess = response.status == 200;
+    };
+
     return {
         ...toRefs(state),
         getCateList,
+        addProduct,
     };
 
 }

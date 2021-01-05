@@ -21,13 +21,13 @@
     <SelectBox
       className="categories"
       label="Chọn danh mục"
-      @DropdownListSelected="updateSelectBox"
+      @DropdownListSelected="dropdownItemSelected"
       :data="categories"
       :uuid="uid()"
     />
 
     <div style="width: 100%">
-      <CKEditor />
+      <CKEditor v-model:productDes="productDes" />
     </div>
 
     <div class="attr-container">
@@ -49,7 +49,7 @@
 
     <button
       type="submit"
-      @click="addProduct"
+      @click="submitAddProduct"
       class="mdc-button mdc-button--raised"
       style="float: right; margin-top: 40px"
     >
@@ -88,20 +88,28 @@ export default {
     const productImage = ref();
     const errProductImage = ref();
 
+    const productDes = ref();
+
     const attrComponent = ref("ProductAttrs");
 
-    const onEditorReady = (editor) => {
-      // Insert the toolbar before the editable area.
-      editor.ui
-        .getEditableElement()
-        .parentElement.insertBefore(
-          editor.ui.view.toolbar.element,
-          editor.ui.getEditableElement()
-        );
+    let cateSelected = null;
+
+    // Lấy về danh sách danh mục
+    const { getCateList, addProduct } = useProduct();
+    const categories = await getCateList();
+
+    // Lấy mặc định giá trị đầu tiền của danh sách danh mục
+    if (categories.length > 0) {
+      cateSelected = categories[0].id;
+    }
+
+    // event khi thay đổi giá trị select box, khi thay đổi thì update giá trị mới cho cateSelected
+    const dropdownItemSelected = async (payload) => {
+      cateSelected = payload.id;
     };
 
-    const updateSelectBox = async (payload) => {};
-
+    // hàm tạo ra id duy nhất cho các thuộc tính của product, phục vụ cho xử lý UI
+    // thao tác gì trên html element của phần thuộc tính này thì dựa vào thông số id này
     const uid = function () {
       return Date.now().toString(36) + Math.random().toString(36).substr(2);
     };
@@ -117,28 +125,44 @@ export default {
       });
     };
 
-    const { getCateList } = useProduct();
-    const categories = await getCateList();
+    const submitAddProduct = () => {
+      if (!cateSelected) {
+        console.log("Yêu cầu danh mục");
+        return;
+      }
 
-    const addProduct = () => {
+      let attrs = [];
       attrsProduct.value.forEach((item) => {
-        item = restoreAttrObject(item);
-        console.log(item);
+        attrs.push(restoreAttrObject(item));
       });
+
+      const collectProductFormData = {
+        productName: productName.value,
+        productImage: productImage.value,
+        cateId: "58adfdd6-08f8-11eb-bdbe-8c8590cefb77",
+        description: productDes.value,
+        collectionId: "1", // giá trị này là hardcode do hệ thống chỉ bán đồng hồ, nếu mở rộng bán sản phẩm khác thì giá trị này sẽ thay đổi
+        attributes: attrs,
+      };
+
+      console.log(JSON.stringify(collectProductFormData));
+
+      addProduct(collectProductFormData);
     };
 
+    // Xử lý khi người dùng click vào nút xóa thuộc tính
     const removeAttribute = (attrId) => {
-      console.log(attrId);
       var removeIndex = attrsProduct.value
         .map(function (item) {
           return item.id;
         })
         .indexOf(attrId);
       attrsProduct.value.splice(removeIndex, 1);
-
-      //document.getElementById(`${attrId}`).remove();
     };
 
+    // khi người dùng bấm thêm thuộc tính và nhập vào các thông tin
+    // thì chúng ta sẽ gom các thông số người dùng nhập lại và build ra object thuộc tính
+    // phục vụ cho việc submit form thêm sản phẩm
     const restoreAttrObject = (attr) => {
       let attrName = new mdc.textField.MDCTextField(
         document.querySelector(`#${attr.id} .attr-name`)
@@ -163,10 +187,10 @@ export default {
       return {
         id: attr.id,
         attrName: attrName.value,
-        size: size.value,
-        price: price.value,
-        promotion: promotion.value,
-        quantity: quantity.value,
+        size: parseInt(size.value),
+        price: parseInt(price.value),
+        promotion: parseInt(promotion.value),
+        quantity: parseInt(quantity.value),
       };
     };
 
@@ -175,6 +199,7 @@ export default {
       errProductName,
       productImage,
       errProductImage,
+      productDes,
 
       // data
       categories,
@@ -182,18 +207,12 @@ export default {
       attrsProduct,
 
       // func
-      updateSelectBox,
+      dropdownItemSelected,
       addAttribute,
-      addProduct,
+      submitAddProduct,
       removeAttribute,
       uid,
     };
   },
 };
 </script>
-
-<style scoped>
-.ck-editor .ck-editor__main .ck-content {
-  min-height: 500px;
-}
-</style>

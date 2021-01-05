@@ -5,6 +5,7 @@
     inputType="text"
     className="cate-name"
     :errorMsg="errCateName"
+    :uuid="uid()"
   />
   <EditText
     hintText="Hình ảnh"
@@ -12,6 +13,7 @@
     inputType="text"
     className="cate-image"
     :errorMsg="errCateImage"
+    :uuid="uid()"
   />
 
   <button
@@ -93,6 +95,12 @@ export default {
       }
     });
 
+    // hàm tạo ra id duy nhất cho các thuộc tính của product, phục vụ cho xử lý UI
+    // thao tác gì trên html element của phần thuộc tính này thì dựa vào thông số id này
+    const uid = function () {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    };
+
     return {
       cateName,
       errCateName,
@@ -100,8 +108,10 @@ export default {
       errCateImage,
       btnCateLabel,
       btnIconCate,
+
       // func
       doAddCate,
+      uid,
     };
   },
 };

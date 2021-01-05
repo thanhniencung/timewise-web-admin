@@ -73,7 +73,14 @@ export default {
     selectData.value = props.data;
 
     if (!props.selectedObject) {
-      selectedObjectValue.value = props.data[0];
+      if (props.data.length > 0) {
+        selectedObjectValue.value = props.data[0];
+      } else {
+        selectedObjectValue.value = {
+          id: 0,
+          value: "Không tồn tại danh mục",
+        };
+      }
     } else {
       selectedObjectValue.value = props.selectedObject;
     }
@@ -84,7 +91,6 @@ export default {
       );
       dropdownList.listen("MDCSelect:change", () => {
         emit("DropdownListSelected", {
-          code: props.code,
           id: dropdownList.value,
         });
       });
