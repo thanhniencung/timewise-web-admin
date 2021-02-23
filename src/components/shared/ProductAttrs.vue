@@ -1,6 +1,6 @@
 <template>
   <div
-    :id="data.id"
+    :id="attrId"
     class="attrs"
     style="
       border-bottom: 3px dotted #5300e8;
@@ -83,7 +83,14 @@ export default {
   },
   setup(props, { emit }) {
     let data = props.data;
-    let attr = null;
+
+    // giá trị của id sẽ khác nhau nếu thuộc tính là thêm mới hay edit
+    // if = thêm mới => id = uid()
+    // if = edit => id = attrId
+    let attrId = ref();
+    attrId.value = props.data.attrId
+      ? `attr-${data.attrId}`
+      : `attr-${data.id}`;
 
     const attrName = ref(data.attrName);
     const errAttrName = ref();
@@ -97,7 +104,7 @@ export default {
     const promotion = ref(data.promotion);
     const errPromotion = ref();
 
-    const quantity = ref(data.quantiry);
+    const quantity = ref(data.quantity);
     const errQuantity = ref();
 
     const uid = function () {
@@ -119,6 +126,7 @@ export default {
       errPromotion,
       quantity,
       errQuantity,
+      attrId,
 
       //func
       removeAttribute,

@@ -31,7 +31,9 @@
     <template #default>
       <component
         v-bind:is="currentTabComponent"
+        v-bind="editProduct"
         @addProductSuccess="addProductSuccess"
+        @editProduct="editFullProduct"
       ></component>
     </template>
   </Suspense>
@@ -49,11 +51,14 @@ export default {
     ProductList,
   },
   setup() {
+    let editProduct = ref();
+
     let currentTabComponent = ref("ProductList");
     let showBtnProductList = ref(false);
     let showBtnAddProduct = ref(true);
 
     const showAddProduct = () => {
+      editProduct.value = null;
       showBtnProductList.value = true;
       showBtnAddProduct.value = false;
       currentTabComponent.value = "AddProduct";
@@ -72,13 +77,25 @@ export default {
       currentTabComponent.value = "ProductList";
     };
 
+    const editFullProduct = (product) => {
+      editProduct.value = { editProductData: product };
+
+      showBtnProductList.value = true;
+      showBtnAddProduct.value = false;
+      currentTabComponent.value = "AddProduct";
+    };
+
     return {
       currentTabComponent,
       showProductList,
       showAddProduct,
       showBtnProductList,
       showBtnAddProduct,
+      editProduct,
+
+      //event
       addProductSuccess,
+      editFullProduct,
     };
   },
 };

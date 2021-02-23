@@ -29,6 +29,16 @@ export const useProduct = () => {
         state.addProductSuccess = response.status == 200;
     };
 
+    const updateProduct = async (product) => {
+        const response = await timewiseApi.put('/product/edit', product);
+        state.addProductSuccess = response.status == 200;
+    };
+
+    const deleteProductAttrById = async (attrId) => {
+        const response = await timewiseApi.delete(`product/attr/${attrId}`);
+        return response.status == 200;
+    };
+
     const getProductList = async () => {
         const response = await timewiseApi.get('/product/list');
         return response.data.data;
@@ -38,6 +48,8 @@ export const useProduct = () => {
         ...toRefs(state),
         getCateList,
         addProduct,
+        updateProduct,
+        deleteProductAttrById,
         getProductList,
     };
 

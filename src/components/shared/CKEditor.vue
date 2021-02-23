@@ -17,6 +17,9 @@ export default {
     onMounted(() => {
       ClassicEditor.create(document.querySelector("#editor"))
         .then((editor) => {
+          if (props.productDes) {
+            editor.setData(props.productDes);
+          }
           editor.model.document.on("change:data", () => {
             emit("update:productDes", editor.getData());
           });

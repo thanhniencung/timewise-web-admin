@@ -57,7 +57,7 @@
                 width: 200px;
               "
             >
-              Cập nhật
+              Ngày tạo
             </th>
             <th
               class="mdc-data-table__header-cell"
@@ -125,6 +125,7 @@
             >
               <button
                 type="submit"
+                @click="editProduct(product)"
                 class="mdc-button mdc-button--raised"
                 style="border-radius: 20px; margin-right: 10px"
               >
@@ -162,7 +163,7 @@ import { parseDate } from "../../helper/timeFormat";
 
 export default {
   name: "ProductList",
-  async setup() {
+  async setup(props, { emit }) {
     const { getProductList } = useProduct();
     const products = await getProductList();
 
@@ -170,9 +171,14 @@ export default {
       return parseDate(d);
     };
 
+    const editProduct = (product) => {
+      emit("editProduct", product);
+    };
+
     return {
       products,
       formatDate,
+      editProduct,
     };
   },
 };

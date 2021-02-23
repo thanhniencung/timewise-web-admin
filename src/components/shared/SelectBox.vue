@@ -28,7 +28,7 @@
     >
       <ul class="mdc-list">
         <li
-          class="mdc-list-item mdc-list-item--selected"
+          class="mdc-list-item mdc-list-item--selected mdc-list-item--disabled"
           aria-selected="false"
           :data-value="selectedObjectValue.id"
           aria-disabled="true"
@@ -41,7 +41,7 @@
         </li>
 
         <li
-          v-for="item in data.slice(1, data.length)"
+          v-for="item in data"
           class="mdc-list-item"
           aria-selected="false"
           :data-value="item.id"
@@ -65,6 +65,7 @@ export default {
     className: String,
     label: String,
     data: Array,
+    selectedObject: Object,
   },
   setup(props, { emit }) {
     let selectedObjectValue = ref();
@@ -73,6 +74,7 @@ export default {
     selectData.value = props.data;
 
     if (!props.selectedObject) {
+      console.log("!props.selectedObject");
       if (props.data.length > 0) {
         selectedObjectValue.value = props.data[0];
       } else {
@@ -82,8 +84,13 @@ export default {
         };
       }
     } else {
+      console.log("props.selectedObject");
       selectedObjectValue.value = props.selectedObject;
     }
+
+    console.log("-----------");
+    console.log(selectedObjectValue.value);
+    console.log("-----------");
 
     onMounted(() => {
       let dropdownList = new mdc.select.MDCSelect(

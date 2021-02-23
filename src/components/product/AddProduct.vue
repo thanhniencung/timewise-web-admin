@@ -23,6 +23,7 @@
       label="Chọn danh mục"
       @DropdownListSelected="dropdownItemSelected"
       :data="categories"
+      :selectedObject="cateSelected"
       :uuid="uid()"
     />
 
@@ -33,6 +34,7 @@
     <div class="attr-container">
       <div v-for="attr in attrsProduct" :key="attr.id">
         <component
+          v-if="!attr.deleted"
           :is="attrComponent"
           :key="attr.id"
           v-bind:data="attr"
@@ -54,7 +56,7 @@
       style="float: right; margin-top: 40px"
     >
       <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-      <span class="mdc-button__label">Thêm sản phẩm</span>
+      <span class="mdc-button__label">{{ submitBtnLabel }}</span>
     </button>
 
     <div class="empty" style="height: 40px; width: 100%"></div>
@@ -78,29 +80,68 @@ export default {
     CKEditor,
     ProductAttrs,
   },
+  props: ["editProductData"],
   async setup(props, { emit }) {
+    console.log(props.editProductData);
+    const submitBtnLabel = ref("Thêm sản phẩm");
+    if (props.editProductData) {
+      submitBtnLabel.value = "Cập nhật sản phẩm";
+    }
+    // hàm tạo ra id duy nhất cho các thuộc tính của product, phục vụ cho xử lý UI
+    // thao tác gì trên html element của phần thuộc tính này thì dựa vào thông số id này
+    const uid = function () {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    };
+
     // chứa thông tin attributes của 1 sản phẩm
     const attrsProduct = ref([]);
+    if (props.editProductData) {
+      attrsProduct.value = props.editProductData.attributes;
+      attrsProduct.value.map((item) => {
+        item.id = item.attrId;
+        item.deleted = false;
+        return item;
+      });
+    }
 
-    const productName = ref();
+    const productName = ref(
+      props.editProductData ? props.editProductData.productName : ""
+    );
     const errProductName = ref();
 
-    const productImage = ref();
+    const productImage = ref(
+      props.editProductData ? props.editProductData.productImage : ""
+    );
     const errProductImage = ref();
 
-    const productDes = ref();
+    const cateSelected = ref();
+
+    const productDes = ref(
+      props.editProductData ? props.editProductData.description : ""
+    );
 
     const attrComponent = ref("ProductAttrs");
 
-    let cateSelected = null;
-
     // Lấy về danh sách danh mục
-    const { getCateList, addProduct, addProductSuccess } = useProduct();
+    const {
+      getCateList,
+      addProduct,
+      updateProduct,
+      deleteProductAttrById,
+      addProductSuccess,
+    } = useProduct();
     const categories = await getCateList();
 
     // Lấy mặc định giá trị đầu tiền của danh sách danh mục
     if (categories.length > 0) {
-      cateSelected = categories[0].id;
+      if (props.editProductData) {
+        cateSelected.value = {
+          id: props.editProductData.cateId,
+          value: props.editProductData.cateName,
+        };
+      } else {
+        cateSelected.value = categories[0];
+      }
     }
 
     // event khi thay đổi giá trị select box, khi thay đổi thì update giá trị mới cho cateSelected
@@ -108,20 +149,16 @@ export default {
       cateSelected = payload.id;
     };
 
-    // hàm tạo ra id duy nhất cho các thuộc tính của product, phục vụ cho xử lý UI
-    // thao tác gì trên html element của phần thuộc tính này thì dựa vào thông số id này
-    const uid = function () {
-      return Date.now().toString(36) + Math.random().toString(36).substr(2);
-    };
-
     const addAttribute = () => {
       attrsProduct.value.push({
         id: uid(),
+        attrId: null,
         attrName: "",
         size: null,
         price: null,
         promotion: null,
         quantity: null,
+        deleted: false,
       });
     };
 
@@ -133,64 +170,91 @@ export default {
 
       let attrs = [];
       attrsProduct.value.forEach((item) => {
-        attrs.push(restoreAttrObject(item));
+        const restoreItem = restoreAttrObject(item);
+        if (restoreItem != null) {
+          attrs.push(restoreAttrObject(item));
+        }
       });
 
       const collectProductFormData = {
+        productId: props.editProductData
+          ? props.editProductData.productId
+          : null,
         productName: productName.value,
         productImage: productImage.value,
-        cateId: cateSelected,
+        cateId: cateSelected.value.id,
         description: productDes.value,
         collectionId: "1", // giá trị này là hardcode do hệ thống chỉ bán đồng hồ, nếu mở rộng bán sản phẩm khác thì giá trị này sẽ thay đổi
         attributes: attrs,
       };
 
-      console.log(JSON.stringify(collectProductFormData));
+      if (props.editProductData) {
+        console.log("START UPDATE PRODUCT");
+        console.log(collectProductFormData);
+        console.log("END UPDATE PRODUCT");
+        updateProduct(collectProductFormData);
+        return;
+      }
       addProduct(collectProductFormData);
     };
 
     // Xử lý khi người dùng click vào nút xóa thuộc tính
-    const removeAttribute = (attrId) => {
-      var removeIndex = attrsProduct.value
-        .map(function (item) {
-          return item.id;
-        })
-        .indexOf(attrId);
-      attrsProduct.value.splice(removeIndex, 1);
+    const removeAttribute = async (id) => {
+      console.log(id);
+      // call api xóa, nếu thành công xóa trên UI, ko thì báo lỗi
+      const deleteOk = await deleteProductAttrById(id);
+      if (deleteOk) {
+        var removeIndex = attrsProduct.value
+          .map(function (item) {
+            return item.id;
+          })
+          .indexOf(id);
+        console.log(removeIndex);
+        attrsProduct.value[removeIndex].deleted = true;
+      } else {
+        console.log("delete failed");
+        // hiển thị thông báo lỗi
+      }
     };
 
     // khi người dùng bấm thêm thuộc tính và nhập vào các thông tin
     // thì chúng ta sẽ gom các thông số người dùng nhập lại và build ra object thuộc tính
     // phục vụ cho việc submit form thêm sản phẩm
     const restoreAttrObject = (attr) => {
-      let attrName = new mdc.textField.MDCTextField(
-        document.querySelector(`#${attr.id} .attr-name`)
-      );
+      try {
+        let attrName = new mdc.textField.MDCTextField(
+          document.querySelector(`#attr-${attr.id} .attr-name`)
+        );
 
-      let size = new mdc.textField.MDCTextField(
-        document.querySelector(`#${attr.id} .attr-size`)
-      );
+        let size = new mdc.textField.MDCTextField(
+          document.querySelector(`#attr-${attr.id} .attr-size`)
+        );
 
-      let price = new mdc.textField.MDCTextField(
-        document.querySelector(`#${attr.id} .attr-price`)
-      );
+        let price = new mdc.textField.MDCTextField(
+          document.querySelector(`#attr-${attr.id} .attr-price`)
+        );
 
-      let promotion = new mdc.textField.MDCTextField(
-        document.querySelector(`#${attr.id} .attr-promotion`)
-      );
+        let promotion = new mdc.textField.MDCTextField(
+          document.querySelector(`#attr-${attr.id} .attr-promotion`)
+        );
 
-      let quantity = new mdc.textField.MDCTextField(
-        document.querySelector(`#${attr.id} .attr-quantity`)
-      );
+        let quantity = new mdc.textField.MDCTextField(
+          document.querySelector(`#attr-${attr.id} .attr-quantity`)
+        );
 
-      return {
-        id: attr.id,
-        attrName: attrName.value,
-        size: parseInt(size.value),
-        price: parseInt(price.value),
-        promotion: parseInt(promotion.value),
-        quantity: parseInt(quantity.value),
-      };
+        return {
+          id: attr.attrId,
+          attrId: attr.attrId, //props.editProductData ? props.editProductData.attrId : null,
+          attrName: attrName.value,
+          size: parseInt(size.value),
+          price: parseInt(price.value),
+          promotion: parseInt(promotion.value),
+          quantity: parseInt(quantity.value),
+        };
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
     };
 
     watch(addProductSuccess, (addProductSuccess, prevAddProductSuccess) => {
@@ -206,6 +270,8 @@ export default {
       productImage,
       errProductImage,
       productDes,
+      cateSelected,
+      submitBtnLabel,
 
       // data
       categories,
