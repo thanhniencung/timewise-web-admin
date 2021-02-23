@@ -199,22 +199,44 @@ export default {
     };
 
     // Xử lý khi người dùng click vào nút xóa thuộc tính
-    const removeAttribute = async (id) => {
-      console.log(id);
-      // call api xóa, nếu thành công xóa trên UI, ko thì báo lỗi
-      const deleteOk = await deleteProductAttrById(id);
-      if (deleteOk) {
-        var removeIndex = attrsProduct.value
-          .map(function (item) {
-            return item.id;
-          })
-          .indexOf(id);
-        console.log(removeIndex);
-        attrsProduct.value[removeIndex].deleted = true;
-      } else {
-        console.log("delete failed");
-        // hiển thị thông báo lỗi
+    // Chú ý khi bấm nút xóa thuộc tính thì nếu thêm mới thuộc tính ko call api
+    const removeAttribute = async (attrId) => {
+      console.log(attrId);
+
+      // check id này có thuốc tính attribute id ko
+      const len = attrsProduct.value.length;
+      let found = false;
+
+      for (let i = 0; i < len; i++) {
+        if (attrsProduct.value[i].attrId == attrId) {
+          found = true;
+
+          console.log("delete call api");
+          const deleteOk = await deleteProductAttrById(attrId);
+          if (deleteOk) {
+            removeAttrUI(attrId);
+          } else {
+            // hiển thị thông báo lỗi
+            console.log("delete failed");
+          }
+          break;
+        }
       }
+
+      if (!found) {
+        console.log("delete ko call api");
+        removeAttrUI(attrId);
+      }
+    };
+
+    const removeAttrUI = (attrId) => {
+      var removeIndex = attrsProduct.value
+        .map(function (item) {
+          return item.id;
+        })
+        .indexOf(attrId);
+      console.log(removeIndex);
+      attrsProduct.value[removeIndex].deleted = true;
     };
 
     // khi người dùng bấm thêm thuộc tính và nhập vào các thông tin

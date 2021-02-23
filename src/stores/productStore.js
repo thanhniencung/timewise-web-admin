@@ -36,6 +36,8 @@ export const useProduct = () => {
 
     const deleteProductAttrById = async (attrId) => {
         const response = await timewiseApi.delete(`product/attr/${attrId}`);
+        console.log(`product/attr/${attrId}`);
+        console.log(response.data);
         return response.status == 200;
     };
 
